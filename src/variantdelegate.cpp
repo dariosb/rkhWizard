@@ -40,6 +40,12 @@
 
 #include <QtGui>
 
+#include <QApplication>
+#include <QDoubleSpinBox>
+#include <QLineEdit>
+#include <QCheckBox>
+#include <QMessageBox>
+
 #include "variantdelegate.h"
 
 static QRect CheckBoxRect(const QStyleOptionViewItem &view_item_style_options) {

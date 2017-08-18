@@ -15,7 +15,12 @@
 #include "inputint.h"
 #include "helplabel.h"
 
-#include <QtGui>
+/*#include <QtGui>*/
+
+#include <QSpinBox>
+#include <QGridLayout>
+#include <QWheelEvent>
+#include <QTextStream>
 
 InputInt::InputInt( QGridLayout *layout,int &row,
                     const QString & id, 
@@ -61,7 +66,7 @@ void InputInt::updateDependencies()
 
 int InputInt::parseCondition(QString value, QString cond, QVariant val)
 {
-    switch(m_qcomp.value(cond.toAscii()))
+    switch(m_qcomp.value(cond.toLatin1()))
     {
     case QMajor:
         if(val.toInt() > value.toInt())
@@ -121,11 +126,11 @@ void InputInt::setValue(int val)
     m_value = m_val;
     if (m_val==m_default)
     {
-      m_lab->setText(QString::fromAscii("<qt>")+m_id+QString::fromAscii("</qt"));
+      m_lab->setText(QString::fromLatin1("<qt>")+m_id+QString::fromLatin1("</qt"));
     }
     else
     {
-      m_lab->setText(QString::fromAscii("<qt><font color='red'>")+m_id+QString::fromAscii("</font></qt>"));
+      m_lab->setText(QString::fromLatin1("<qt><font color='red'>")+m_id+QString::fromLatin1("</font></qt>"));
     }
     updateDependencies(QVariant(val));
     emit changed();

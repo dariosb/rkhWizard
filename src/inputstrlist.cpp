@@ -16,7 +16,17 @@
 #include "helplabel.h"
 #include "rkhwiz.h"
 
-#include <QtGui>
+/*#include <QtGui>*/
+
+#include <QToolBar>
+#include <QGridLayout>
+#include <QLineEdit>
+#include <QListWidget>
+#include <QFileInfo>
+#include <QFileDialog>
+#include <QTextStream>
+#include <QTextCodec>
+
 
 InputStrList::InputStrList( QGridLayout *layout,int &row,
                             const QString & id, 
@@ -33,13 +43,13 @@ InputStrList::InputStrList( QGridLayout *layout,int &row,
   toolBar->setIconSize(QSize(16,16));
   toolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
 
-  m_add = toolBar->addAction(QIcon(QString::fromAscii(":/images/add.png")),QString(tr("add")),
+  m_add = toolBar->addAction(QIcon(QString::fromLatin1(":/images/add.png")),QString(tr("add")),
                              this,SLOT(addString()));
   m_add->setToolTip(tr("Add item"));
-  m_del = toolBar->addAction(QIcon(QString::fromAscii(":/images/del.png")),QString(tr("delete")),
+  m_del = toolBar->addAction(QIcon(QString::fromLatin1(":/images/del.png")),QString(tr("delete")),
                              this,SLOT(delString()));
   m_del->setToolTip(tr("Delete selected item"));
-  m_upd = toolBar->addAction(QIcon(QString::fromAscii(":/images/refresh.png")),QString(tr("refresh")),
+  m_upd = toolBar->addAction(QIcon(QString::fromLatin1(":/images/refresh.png")),QString(tr("refresh")),
                              this,SLOT(updateString()));
   m_upd->setToolTip(tr("Update selected item"));
 
@@ -53,13 +63,13 @@ InputStrList::InputStrList( QGridLayout *layout,int &row,
   {
     if (lm&ListFile)
     {
-      m_brFile = toolBar->addAction(QIcon(QString::fromAscii(":/images/file.png")),QString(),
+      m_brFile = toolBar->addAction(QIcon(QString::fromLatin1(":/images/file.png")),QString(),
                                     this,SLOT(browseFiles()));
       m_brFile->setToolTip(tr("Browse to a file"));
     } 
     if (lm&ListDir)
     {
-      m_brDir = toolBar->addAction(QIcon(QString::fromAscii(":/images/folder.png")),QString(),
+      m_brDir = toolBar->addAction(QIcon(QString::fromLatin1(":/images/folder.png")),QString(),
                                    this,SLOT(browseDir()));
       m_brDir->setToolTip(tr("Browse to a folder"));
     }
@@ -188,7 +198,7 @@ void InputStrList::browseDir()
     }
     if (dirName.isEmpty())
     {
-      dirName=QString::fromAscii(".");
+      dirName=QString::fromLatin1(".");
     }
     m_lb->addItem(dirName);
     m_strList.append(dirName);
@@ -225,11 +235,11 @@ void InputStrList::updateDefault()
 {
   if (m_strList==m_default)
   {
-    m_lab->setText(QString::fromAscii("<qt>")+m_id+QString::fromAscii("</qt"));
+    m_lab->setText(QString::fromLatin1("<qt>")+m_id+QString::fromLatin1("</qt"));
   }
   else
   {
-    m_lab->setText(QString::fromAscii("<qt><font color='red'>")+m_id+QString::fromAscii("</font></qt>"));
+    m_lab->setText(QString::fromLatin1("<qt><font color='red'>")+m_id+QString::fromLatin1("</font></qt>"));
   }
 }
 
@@ -240,7 +250,7 @@ void InputStrList::reset()
 
 void InputStrList::writeValue(QTextStream &t,QTextCodec *codec)
 {
-  bool first=TRUE;
+  bool first=true;
   foreach (QString s, m_strList) 
   {
     if (!first) 
@@ -248,7 +258,7 @@ void InputStrList::writeValue(QTextStream &t,QTextCodec *codec)
       t << " \\" << endl;
       t << "                         ";
     }
-    first=FALSE;
+    first=false;
 
   }
 }

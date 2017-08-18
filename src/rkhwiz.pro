@@ -8,10 +8,11 @@
 
 TEMPLATE     = app
 DESTDIR      = bin
-TARGET       = 
+TARGET       = rkhwiz
 DEPENDPATH  += .
 INCLUDEPATH += .
 QT          += xml
+QT          += widgets
 CONFIG      += debug
 OBJECTS_DIR  = obj
 MOC_DIR      = moc

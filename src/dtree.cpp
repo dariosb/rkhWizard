@@ -182,14 +182,14 @@ void DTree::ParseSY(QString str)
         }else if( isOperator(data))
         {
             changeParseState(POPERATOR,&token,data);
-            qDebug() << "OP" << data->toAscii();
+            qDebug() << "OP" << data->toLatin1();
         }else if( data->unicode() == ' ' )
         {
             changeParseState(PSPACE,&token,data);
             qDebug() << "SPACE";
         }else{
             changeParseState(POPERAND,&token,data);
-            qDebug() << "VALUE" << data->toAscii();
+            qDebug() << "VALUE" << data->toLatin1();
         }
         data++;
     }
@@ -217,7 +217,7 @@ bool DTree::EvalRPN()
     stack.clear();
     for (int i = output.size(), idx = i-1;i; --i, --idx)
     {
-       QString token = output.at(idx).toAscii();
+       QString token = output.at(idx).toLatin1();
        if(isOperator(&token))
        {
            opnd2 = stack.at(0);

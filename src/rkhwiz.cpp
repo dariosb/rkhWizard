@@ -8,6 +8,28 @@
 #include "settingstree.h"
 #include "settingdialog.h"
 
+#include <QMenu>
+#include <QMenuBar>
+#include <QPushButton>
+#include <QMessageBox>
+#include <QVBoxLayout>
+#include <QLineEdit>
+#include <QLabel>
+#include <QTextBrowser>
+#include <QStatusBar>
+#include <QProcess>
+#include <QTimer>
+#include <QCloseEvent>
+#include <QApplication>
+#include <QDir>
+#include <QFileDialog>
+#include <QDesktopServices>
+#include <QUrl>
+#include <QTextStream>
+#include <QSplashScreen>
+#include <QStyleFactory>
+
+
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -176,7 +198,7 @@ void MainWindow::about()
 {
   QString msg;
   QTextStream t(&msg,QIODevice::WriteOnly);
-  t << QString::fromAscii("<qt><center>This is a tool to generate RKH configuration header file</center>"
+  t << QString::fromLatin1("<qt><center>This is a tool to generate RKH configuration header file</center>"
        "<center>Based on doxywizard work of Dimitri van Heesch. Written by Jorge Courett<br>&copy; 2012</center></qt>");
   QMessageBox::about(this,tr("RKH Configuration GUI"),msg);
 }
@@ -184,7 +206,7 @@ void MainWindow::about()
 void MainWindow::loadFile(QString file)
 {
     setCurrentFile(file);
-    m_xmlFileName->setText(file.toAscii());
+    m_xmlFileName->setText(file.toLatin1());
     m_expert->loadXmlFile(file);
     m_saveTo->setDisabled(false);
     m_saveHeader->setDisabled(false);
@@ -288,11 +310,11 @@ void MainWindow::updateTitle()
   QString title = tr("RKH GUI frontend");
   if (m_modified)
   {
-    title+=QString::fromAscii(" +");
+    title+=QString::fromLatin1(" +");
   }
   if (!m_fileName.isEmpty())
   {
-    title+=QString::fromAscii(" (")+m_fileName+QString::fromAscii(")");
+    title+=QString::fromLatin1(" (")+m_fileName+QString::fromLatin1(")");
   }
   setWindowTitle(title);
 }
@@ -337,9 +359,9 @@ void MainWindow::setSettings(QSettings *qs)
 
 bool MainWindow::matchExt(QString ext,QString fileName)
 {
-    QRegExp rx("*."+ext.toAscii());
+    QRegExp rx("*."+ext.toLatin1());
     rx.setPatternSyntax(QRegExp::Wildcard);
-    return rx.exactMatch(fileName.toAscii());
+    return rx.exactMatch(fileName.toLatin1());
 }
 
 
@@ -417,22 +439,26 @@ void MainWindow::setSettingsObject(QSettings *settings)
  * Main
  */
 
-void MessageOutput(QtMsgType type, const char *msg)
+void MessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    switch (type) {
+    QByteArray localMsg = msg.toLocal8Bit();
+        switch (type) {
         case QtDebugMsg:
-            fprintf(stdout, "Debug: %s\n", msg);
+            fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+            break;
+        case QtInfoMsg:
+            fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
             break;
         case QtWarningMsg:
-            fprintf(stderr, "Warning: %s\n", msg);
+            fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
             break;
         case QtCriticalMsg:
-            fprintf(stderr, "Critical: %s\n", msg);
+            fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
             break;
         case QtFatalMsg:
-            fprintf(stderr, "Fatal: %s\n", msg);
+            fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
             abort();
-    }
+        }
 }
 
 void
@@ -451,11 +477,11 @@ valSettings(QSettings *pqs)
 
 int main(int argc,char **argv)
 {
-    qInstallMsgHandler(MessageOutput);
+    qInstallMessageHandler(MessageOutput);
 
     QTextCodec *Codec = QTextCodec::codecForName("UTF-8");
-    QTextCodec::setCodecForTr(Codec);
-    QTextCodec::setCodecForCStrings(Codec);
+//    QTextCodec::setCodecForTr(Codec);
+//    QTextCodec::setCodecForCStrings(Codec);
     QTextCodec::setCodecForLocale(Codec);
 
     QSettings settings( CF_PATH, QSettings::IniFormat );

@@ -5,6 +5,8 @@
 #include "spinboxdelegate.h"
 #include "ipboxdelegate.h"
 
+#include <QHeaderView>
+
 SettingsTree::SettingsTree(QWidget *parent)
     : QTreeWidget(parent)
 {
@@ -13,8 +15,8 @@ SettingsTree::SettingsTree(QWidget *parent)
     QStringList labels;
     labels << tr("Setting") << tr("Value");
     setHeaderLabels(labels);
-    header()->setResizeMode(0, QHeaderView::Stretch);
-    header()->setResizeMode(1, QHeaderView::Stretch);
+    header()->setSectionResizeMode(0, QHeaderView::Stretch);
+    header()->setSectionResizeMode(1, QHeaderView::Stretch);
 
     settings = 0;
     refreshTimer.setInterval(2000);

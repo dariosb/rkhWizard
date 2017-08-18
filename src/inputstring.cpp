@@ -16,14 +16,23 @@
 #include "helplabel.h"
 #include "rkhwiz.h"
 
-#include <QtGui>
+/*#include <QtGui>*/
+
+#include <QComboBox>
+#include <QLineEdit>
+#include <QGridLayout>
+#include <QWheelEvent>
+#include <QToolBar>
+#include <QFileInfo>
+#include <QFileDialog>
+#include <QTextCodec>
 
 InputString::InputString( QGridLayout *layout,int &row,
                           const QString & id, const QString &s, 
                           StringMode m, const QString &docs,
                           const QString &absPath )
   : m_default(s), m_sm(m), m_index(0), m_docs(docs), m_id(id),
-    m_absPath(absPath==QString::fromAscii("1"))
+    m_absPath(absPath==QString::fromLatin1("1"))
 {
   m_lab = new HelpLabel(id);
   if (m==StringFixed)
@@ -48,12 +57,12 @@ InputString::InputString( QGridLayout *layout,int &row,
       m_br->setIconSize(QSize(24,24));
       if (m==StringFile) 
       {
-        QAction *file = m_br->addAction(QIcon(QString::fromAscii(":/images/file.png")),QString(),this,SLOT(browse()));
+        QAction *file = m_br->addAction(QIcon(QString::fromLatin1(":/images/file.png")),QString(),this,SLOT(browse()));
         file->setToolTip(tr("Browse to a file"));
       }
       else 
       {
-        QAction *dir = m_br->addAction(QIcon(QString::fromAscii(":/images/folder.png")),QString(),this,SLOT(browse()));
+        QAction *dir = m_br->addAction(QIcon(QString::fromLatin1(":/images/folder.png")),QString(),this,SLOT(browse()));
         dir->setToolTip(tr("Browse to a folder"));
       }
       layout->addWidget( m_br,row,2 );
@@ -71,7 +80,7 @@ InputString::InputString( QGridLayout *layout,int &row,
                       this,   SLOT(setValue(const QString&)) );
   if (m_com) connect( m_com,  SIGNAL(activated(const QString &)), 
                       this,   SLOT(setValue(const QString &)) );
-  m_str = s+QChar::fromAscii('!'); // force update
+  m_str = s+QChar::fromLatin1('!'); // force update
   setValue(s);
   connect( m_lab, SIGNAL(enter()), SLOT(help()) );
   connect( m_lab, SIGNAL(reset()), SLOT(reset()) );
@@ -96,11 +105,11 @@ void InputString::setValue(const QString &s)
     m_value = m_str;
     if (m_str==m_default)
     {
-      m_lab->setText(QString::fromAscii("<qt>")+m_id+QString::fromAscii("</qt"));
+      m_lab->setText(QString::fromLatin1("<qt>")+m_id+QString::fromLatin1("</qt"));
     }
     else
     {
-      m_lab->setText(QString::fromAscii("<qt><font color='red'>")+m_id+QString::fromAscii("</font></qt>"));
+      m_lab->setText(QString::fromLatin1("<qt><font color='red'>")+m_id+QString::fromLatin1("</font></qt>"));
     }
     if (m_le && m_le->text()!=m_str) m_le->setText( m_str );
     emit changed();

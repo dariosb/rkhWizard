@@ -2,6 +2,9 @@
 #include "settingstree.h"
 #include <QtGui>
 
+#include <QPushButton>
+#include <QHBoxLayout>
+
 SettingDialog::SettingDialog(QWidget *parent, SettingsTree *tree) :
     QDialog(parent)
 {

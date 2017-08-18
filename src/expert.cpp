@@ -8,8 +8,18 @@
 #include <QtXml>
 #include "version.h"
 
+#include <QTreeWidget>
+#include <QStackedWidget>
+#include <QTextBrowser>
+#include <QScrollBar>
+#include <QScrollArea>
+#include <QGridLayout>
+#include <QPushButton>
+#include <QMessageBox>
+
+
 #undef  SA
-#define SA(x) QString::fromAscii(x)
+#define SA(x) QString::fromLatin1(x)
 #define COMMENT_MAX_LONG 75
 #define __DISABLE_NOPRINT_DEPEND__
 
@@ -75,7 +85,7 @@ Expert::Expert()
   m_treeWidget = new QTreeWidget;
   m_treeWidget->setColumnCount(1);
   m_topicStack = new QStackedWidget;
-  m_inShowHelp = FALSE;
+  m_inShowHelp = false;
 
   m_helper = new QTextEdit;
   m_helper->setObjectName("Help");
@@ -87,9 +97,9 @@ Expert::Expert()
 
   m_rightSide = new QWidget;
   QGridLayout *grid = new QGridLayout(m_rightSide);
-  m_prev = new QPushButton(QIcon(QString::fromAscii(":back")),tr("Previous"));
+  m_prev = new QPushButton(QIcon(QString::fromLatin1(":back")),tr("Previous"));
   m_prev->setEnabled(false);
-  m_next = new QPushButton(QIcon(QString::fromAscii(":next")),tr("Next"));
+  m_next = new QPushButton(QIcon(QString::fromLatin1(":next")),tr("Next"));
   grid->addWidget(m_topicStack,0,0,1,2);
   grid->addWidget(m_prev,1,0,Qt::AlignLeft);
   grid->addWidget(m_next,1,1,Qt::AlignRight);
@@ -484,8 +494,8 @@ bool Expert::writeConfig(QString fileName, QTextStream &t,bool brief)
   if (!brief)
   {
           // write global header
-          t << "#ifndef __" << fileName.toUpper().toAscii() << "_H__\n";
-          t << "#define __" << fileName.toUpper().toAscii() << "_H__\n";
+          t << "#ifndef __" << fileName.toUpper().toLatin1() << "_H__\n";
+          t << "#define __" << fileName.toUpper().toLatin1() << "_H__\n";
   }
 
   QTextCodec *codec = 0;
@@ -528,15 +538,15 @@ void Expert::showHelp(Input *option)
 {
   if (!m_inShowHelp)
   {
-    m_inShowHelp = TRUE;
+    m_inShowHelp = true;
     m_helper->setText(
-        QString::fromAscii("<qt><b>")+option->id()+
-        QString::fromAscii("</b><br>")+
+        QString::fromLatin1("<qt><b>")+option->id()+
+        QString::fromLatin1("</b><br>")+
         option->docs().
-        replace(QChar::fromAscii('\n'),QChar::fromAscii(' '))+
-        QString::fromAscii("<qt>")
+        replace(QChar::fromLatin1('\n'),QChar::fromLatin1(' '))+
+        QString::fromLatin1("<qt>")
         );
-    m_inShowHelp = FALSE;
+    m_inShowHelp = false;
   }
 }
 
@@ -575,7 +585,7 @@ void Expert::resetToDefaults()
 static bool stringVariantToBool(const QVariant &v)
 {
   QString s = v.toString().toLower();
-  return s==QString::fromAscii("yes") || s==QString::fromAscii("true") || s==QString::fromAscii("1");
+  return s==QString::fromLatin1("yes") || s==QString::fromLatin1("true") || s==QString::fromLatin1("1");
 } 
 
 static bool getBoolOption(
