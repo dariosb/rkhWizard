@@ -3,6 +3,11 @@
 
 #include "definitions.h"
 #include "rkhcfg.h"
+#include "inputbool.h"
+#include "inputstring.h"
+#include "inputint.h"
+#include "inputstring.h"
+#include "inputstrlist.h"
 #include "version.h"
 #include "settingstree.h"
 #include "settingdialog.h"
@@ -27,7 +32,6 @@
 
 RkhCfg::RkhCfg()
 {
-#if 0
   m_treeWidget = new QTreeWidget;
   m_treeWidget->setColumnCount(1);
   m_topicStack = new QStackedWidget;
@@ -59,20 +63,17 @@ RkhCfg::RkhCfg()
   connect(m_next,SIGNAL(clicked()),SLOT(nextTopic()));
   connect(m_prev,SIGNAL(clicked()),SLOT(prevTopic()));
   setMinimumSize(600,400);
-#endif
 }
 
 
 RkhCfg::~RkhCfg()
 {
-#if 0
   QHashIterator<QString,Input*> i(m_options);
   while (i.hasNext())
   {
     i.next();
     delete i.value();
   }
-#endif
 }
 
 
@@ -279,45 +280,37 @@ QWidget *RkhCfg::createTopicWidget(QDomElement &elem)
 
 void RkhCfg::createTopics(const QDomElement &rootElem)
 {
-  QList<QTreeWidgetItem*> items;
-  QDomElement childElem = rootElem.firstChildElement();
-  m_treeWidget->clear();
-  QString name;
+    QList<QTreeWidgetItem*> items;
+    QDomElement childElem = rootElem.firstChildElement();
+    m_treeWidget->clear();
+    QString name;
 
-//  while (!childElem.isNull())
-//  {
+    if(childElem.tagName() != SA("compounddef") )
+        return;
+
+    childElem = childElem.firstChildElement();
     name = childElem.tagName();
-    if (childElem.tagName()==SA("compounddef"))
+    while (!childElem.isNull())
     {
-      QDomElement child = childElem.firstChildElement();
-      name = child.tagName();
-      while(child.tagName() != SA("sectiondef"))
+      if (childElem.tagName()==SA("innergroup"))
       {
-        child = child.nextSiblingElement();
-        name = child.tagName();
+        QString name = childElem.text();
+        name = name.remove(0, strlen("Related to "));
+        name = name.toUpper();
+        items.append(new QTreeWidgetItem((QTreeWidget*)0,QStringList(name)));
+        QWidget *widget = createTopicWidget(childElem);
+        m_topics[name] = widget;
+        m_topicStack->addWidget(widget);
       }
-      child = child.firstChildElement();
-      name = child.tagName();
-      if(child.tagName() == SA("memberdef"))
-      {
-          name = child.attribute(SA("id"));
-          items.append(new QTreeWidgetItem((QTreeWidget*)0,QStringList(name)));
-          QWidget *widget = createTopicWidget(childElem);
-          m_topics[name] = widget;
-          m_topicStack->addWidget(widget);
-      }
+      childElem = childElem.nextSiblingElement();
+      name = childElem.tagName();
     }
-
-
-//    childElem = childElem.nextSiblingElement();
-//  }
-
-  m_treeWidget->setHeaderLabels(QStringList() << SA("Topics"));
-  m_treeWidget->insertTopLevelItems(0,items);
-  connect(m_treeWidget,
-          SIGNAL(currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)),
-          this,
-          SLOT(activateTopic(QTreeWidgetItem *,QTreeWidgetItem *)));
+    m_treeWidget->setHeaderLabels(QStringList() << SA("Topics"));
+    m_treeWidget->insertTopLevelItems(0,items);
+    connect(m_treeWidget,
+            SIGNAL(currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)),
+            this,
+            SLOT(activateTopic(QTreeWidgetItem *,QTreeWidgetItem *)));
 }
 
 void RkhCfg::loadXmlFile(QString xmlFile)

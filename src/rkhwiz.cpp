@@ -4,7 +4,7 @@
 #include "definitions.h"
 #include "rkhwiz.h"
 #include "version.h"
-#include "expert.h"
+//#include "expert.h"
 #include "rkhcfg.h"
 #include "settingstree.h"
 #include "settingdialog.h"
@@ -71,7 +71,7 @@ MainWindow::MainWindow()
   help->addAction(tr("Manual"),this, SLOT(manual()), Qt::Key_F1);
   help->addAction(tr("About"), this, SLOT(about()) );
 
-  m_expert = new Expert;
+//  m_expert = new Expert;
   m_rkhcfg = new RkhCfg;
   QWidget *topPart = new QWidget;
   QVBoxLayout *rowLayout = new QVBoxLayout(topPart);
@@ -104,7 +104,7 @@ MainWindow::MainWindow()
   toolBar->setFloatable(true);
   toolBar->setAllowedAreas(Qt::TopToolBarArea|Qt::BottomToolBarArea);
 
-  rowLayout->addWidget(m_expert);
+//  rowLayout->addWidget(m_expert);
   rowLayout->addWidget(m_rkhcfg);
 
   addToolBar(toolBar);
@@ -119,7 +119,7 @@ MainWindow::MainWindow()
   connect(m_openHeader, SIGNAL(clicked()),  SLOT(openHeader()));
   connect(m_xmlDefault, SIGNAL(clicked()),  SLOT(openConfigFromDefault()));
   connect(m_xmlFile,    SIGNAL(clicked()),  SLOT(openConfig()));
-  connect(m_expert,     SIGNAL(changed()),  SLOT(configChanged()));
+//  connect(m_expert,     SIGNAL(changed()),  SLOT(configChanged()));
   connect(m_rkhcfg,     SIGNAL(changed()),  SLOT(configChanged()));
 
   m_modified = false;
@@ -212,7 +212,7 @@ void MainWindow::loadFile(QString file)
 {
     setCurrentFile(file);
     m_xmlFileName->setText(file.toLatin1());
-    m_expert->loadXmlFile(file);
+//    m_expert->loadXmlFile(file);
     m_saveTo->setDisabled(false);
     m_saveHeader->setDisabled(false);
     m_openHeader->setDisabled(false);
@@ -263,11 +263,11 @@ void MainWindow::saveHeader(const QString &fileName)
   }
   QTextStream t(&f);
 
-  m_expert->writeConfig(QFileInfo(fileName).baseName(),t,false);
+//  m_expert->writeConfig(QFileInfo(fileName).baseName(),t,false);
   QString fn = fileName;
   fn.replace(".h",".xml");
 
-  m_expert->saveXmlFile(fn);
+  //m_expert->saveXmlFile(fn);
   m_saveTo->setText(fileName);
 
   updateConfigFileName(fileName);
@@ -509,7 +509,7 @@ int main(int argc,char **argv)
 
     QPixmap pixmap(":splash");
     QSplashScreen *splash = new QSplashScreen(pixmap);
-    splash->setWindowFlags(splash->windowFlags() | Qt::WindowStaysOnTopHint);
+    splash->setWindowFlags(splash->windowFlags() | Qt::WindowStaysOnBottomHint);
     splash->show();
     app.processEvents();
     splash->showMessage(QObject::tr("\n\nLoading ..."),Qt::AlignCenter,Qt::white);
@@ -524,8 +524,10 @@ int main(int argc,char **argv)
            settings.value(CF_STYLE).toString()));
 
     MainWindow &main = MainWindow::instance();
+
     main.setSettings(&settings);
     main.show();
+
     splash->finish(&main);
 
     return app.exec();
