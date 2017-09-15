@@ -49,7 +49,7 @@ unix {
 }
 
 # Input
-HEADERS     += expert.h helplabel.h \
+HEADERS     += expert.h rkhcfg.h helplabel.h \
                inputbool.h inputstring.h inputint.h inputstrlist.h \
     rkhwiz.h \
     definitions.h \
@@ -64,7 +64,8 @@ SOURCES     += expert.cpp \
     dtree.cpp \
     settingstree.cpp \
     variantdelegate.cpp \
-    settingdialog.cpp
+    settingdialog.cpp \
+    rkhcfg.cpp
 LEXSOURCES  +=
 RESOURCES   += rkhwiz.qrc
 win32:RC_FILE += rkhwiz.rc

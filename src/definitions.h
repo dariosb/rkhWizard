@@ -17,6 +17,9 @@
 #define DFTCF_TEMPLATE    "./templates/rkhcfg.xml"
 
 
+#define RKH_CFG_FILE    "./templates/group__config.xml"
+
+
 
 #define LANG_PATH    "./lang"
 #define HELP_FILE    "./doc/html/index.html"

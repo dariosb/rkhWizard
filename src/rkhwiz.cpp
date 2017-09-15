@@ -5,6 +5,7 @@
 #include "rkhwiz.h"
 #include "version.h"
 #include "expert.h"
+#include "rkhcfg.h"
 #include "settingstree.h"
 #include "settingdialog.h"
 
@@ -71,6 +72,7 @@ MainWindow::MainWindow()
   help->addAction(tr("About"), this, SLOT(about()) );
 
   m_expert = new Expert;
+  m_rkhcfg = new RkhCfg;
   QWidget *topPart = new QWidget;
   QVBoxLayout *rowLayout = new QVBoxLayout(topPart);
   toolBar = new QToolBar(tr("File Generation"));
@@ -103,6 +105,7 @@ MainWindow::MainWindow()
   toolBar->setAllowedAreas(Qt::TopToolBarArea|Qt::BottomToolBarArea);
 
   rowLayout->addWidget(m_expert);
+  rowLayout->addWidget(m_rkhcfg);
 
   addToolBar(toolBar);
   setCentralWidget(topPart);
@@ -117,10 +120,12 @@ MainWindow::MainWindow()
   connect(m_xmlDefault, SIGNAL(clicked()),  SLOT(openConfigFromDefault()));
   connect(m_xmlFile,    SIGNAL(clicked()),  SLOT(openConfig()));
   connect(m_expert,     SIGNAL(changed()),  SLOT(configChanged()));
+  connect(m_rkhcfg,     SIGNAL(changed()),  SLOT(configChanged()));
 
   m_modified = false;
   updateTitle();
 
+  m_rkhcfg->loadDefaultRkhConfig();
 }
 
 void MainWindow::openHeader()

@@ -7,6 +7,7 @@
 #include <QToolBar>
 
 class Expert;
+class RkhCfg;
 class Wizard;
 class QLabel;
 class QLineEdit;
@@ -79,6 +80,7 @@ class MainWindow : public QMainWindow
     QPushButton *m_xmlFile;
     QPushButton *m_xmlDefault;
     Expert *m_expert;
+    RkhCfg *m_rkhcfg;
     QString m_fileName;
     bool m_modified;
     QToolBar *toolBar;
